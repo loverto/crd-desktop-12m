@@ -110,13 +110,13 @@ function  selectAreaByPointArray(point1,point2) {
     const lut = point1;
     const rdt = point2;
     dm.moveTo(lut[0],lut[1])
-    sleep.msleep(500);
+    sleep.msleep(300);
     dm.leftDown();
-    sleep.msleep(500)
+    sleep.msleep(300)
     dm.moveTo(rdt[0],rdt[1])
-    sleep.msleep(500)
+    sleep.msleep(300)
     dm.leftUp();
-    sleep.msleep(500)
+    sleep.msleep(300)
 }
 
 /**

@@ -93,9 +93,9 @@ for(let i=0;i<6;i++){
 let lastPosition = modelPosition[modelPosition.length-1]
 let x = lastPosition.split(",")[0];
 let y = lastPosition.split(",")[1];
-// 生成右侧模板坐标
-for(let i=0;i<6;i++){
-    modelPosition[i+6] = (x*1+99)+","+(y-i*65)
+// 生成右侧模板坐标,从上往下
+for(let i=6;i>0;i--){
+    modelPosition.push((x*1+99)+","+(y-(i-1)*65))
 }
 //打印模板坐标
 logger.debug(JSON.stringify(modelPosition))
@@ -248,7 +248,7 @@ function main(configObject) {
                 // 获取缓存的批次号量
                 pchIncreateFlag = crd.pchIncreateFlag;
             }
-            let dataArr = _.chunk(dataa,1);
+            let dataArr = _.chunk(dataa,12);
             logger.debug("dataArr ：" + dataArr.length);
             // 遍历按行读取的数据
             for (i; i<dataArr.length; i++){
@@ -294,8 +294,6 @@ function main(configObject) {
                         coreldraw.saveAsPath(exportPathAbsout);
                         sleep.msleep(3000)
                         logger.debug("保存完毕，开始关闭当前标签页")
-                        coreldraw.closeModel();
-                        coreldraw.closeModel();
                         coreldraw.closeModel();
                         sleep.msleep(500)
                         logger.debug("关闭完毕")
@@ -369,16 +367,16 @@ function importModelAndUnLock (coreldrawHandlerFilePath) {
     dm.moveTo(leftClickCoordinate[0], leftClickCoordinate[1])
     sleep.msleep(200)
     dm.leftClick()
-    sleep.msleep(2000)
+    sleep.msleep(200)
     logger.debug('开始解除组合')
     // 解锁
     coreldraw.ctrlAndU()
 
     logger.debug('点击空白坐标')
     // 点击空白坐标
-    sleep.msleep(500)
+    sleep.msleep(200)
     coreldraw.moveAndClick(clickWhite)
-    sleep.msleep(500)
+    sleep.msleep(200)
 
     logger.debug('开始删除无关的图')
 }
@@ -404,16 +402,15 @@ function handler(coreldrawHandlerFilePath,model,flag,coordinateArray,filename,nu
     sleep.msleep(500)
     logger.debug("start import model")
     importModelAndUnLock(coreldrawHandlerFilePath)
-    sleep.msleep(500)
-    logger.debug("start position"+JSON.stringify(leftClickCoordinate))
-    dm.moveTo(leftClickCoordinate[0],leftClickCoordinate[1])
     sleep.msleep(200)
-    dm.leftClick();
-    sleep.msleep(2000)
+    coreldraw.moveAndClick("199,511".split(","))
+    sleep.msleep(200)
     // 复制指定次数,并移动到对应位置
     logger.debug("start copy")
-
-    coreldraw.copyObjectAndMoveCoordinate("199,511".split(","),coordinateArray,clickWhite,innerCopyCount);
+    let coordinateArrayElement = coordinateArray[number];
+    logger.debug("coordinateArrayElement:"+JSON.stringify(coordinateArrayElement))
+    // 从开始位置移动到指定位置
+    common.selectAreaByPointArray("199,511".split(","),coordinateArrayElement.split(","))
     logger.debug("start paste")
     // 点击空白坐标
     sleep.msleep(200)
